@@ -26,8 +26,8 @@ export default class Customer {
         return this._id
     }
 
-    set Adress(adress: Adress){
-        this._adress = adress
+    get adress(){
+       return this._adress
     }
 
     isActive(): boolean{
@@ -46,6 +46,10 @@ export default class Customer {
  
     changeName(name: string){
         this._name = name
+    }
+
+    changeAdress(adress: Adress){
+        this._adress = adress
     }
 
     ativate() {
