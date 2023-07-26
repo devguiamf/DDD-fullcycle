@@ -94,11 +94,12 @@ describe("Customer repository test", () => {
         const customer = new Customer("1", "Customer 1");
         const adress = new Adress("Maranhao", 2255, "14401386", "Franca");
         customer.changeAdress(adress);
+        await cutomerRepository.create(customer);
 
         customer.changeName("Customer 2");
         await cutomerRepository.update(customer);
 
-        const customerModel = await CustomerModel.findOne({where: {id: "1"}});
+        const customerModel = await CustomerModel.findOne({where: {id: customer.id}});
 
         expect(customerModel.toJSON()).toStrictEqual({
             id: customer.id,
