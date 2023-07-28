@@ -24,13 +24,13 @@ describe("Order unit test ", () => {
             const item = new OrderItem("i1", "Item 1", 80, 'p1', 2);
             const item2 = new OrderItem("i2", "Item 2", 120, 'p2', 5);
             const order = new Order("o1","c1",[item])
-            let total = order.total();
+            let total = order.total;
 
             expect(total).toBe(160);
 
             const order2 = new Order("2","1", [item, item2])
 
-            total = order2.total()
+            total = order2.total
 
             expect(total).toBe(760)
 

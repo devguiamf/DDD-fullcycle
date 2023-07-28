@@ -1,7 +1,7 @@
 import { Model, PrimaryKey, Column, Table } from "sequelize-typescript";
 
 @Table({
-    tableName: "products",
+    tableName: "customers",
     timestamps: false,
 })
 
@@ -10,7 +10,7 @@ export default class CustomerModel extends Model {
     @Column
     declare id: string;
 
-    @Column
+    @Column({allowNull: false})
     declare name: string;
 
     @Column({allowNull: false})

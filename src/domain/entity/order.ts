@@ -10,11 +10,11 @@ export default class Order {
         this._id = id
         this._customerId = customerId
         this._items = items
-        this._total = this.total();
+        this._total = this.total;
         this.validate()
     }
 
-    total(): number {
+    get total(): number {
         return this._items.reduce((acc, item) => acc + item.orderItemTotal(), 0);
       }
     
@@ -28,6 +28,10 @@ export default class Order {
 
     get items(): OrderItem[]{
         return this._items
+    }
+
+    changeItems(item: OrderItem[]){
+        this._items = item
     }
 
     validate(): boolean {

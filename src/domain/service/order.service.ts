@@ -11,11 +11,11 @@ export default class OrderService {
         }
 
         const order1 = new Order(uuid(), custumer.id, items)
-        custumer.addRewardPoints(order1.total() / 2)
+        custumer.addRewardPoints(order1.total / 2)
         return order1
     }
     
     static total(orders: Order[]): number {
-        return orders.reduce((acc,order) => acc + order.total(), 0)
+        return orders.reduce((acc,order) => acc + order.total, 0)
     }
 }

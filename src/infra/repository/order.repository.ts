@@ -1,3 +1,4 @@
+import { where } from "sequelize";
 import Order from "../../domain/entity/order";
 import OrderItem from "../../domain/entity/order_item";
 import OrderRepositoryInterface from "../../domain/repository/order.repository.interface";
@@ -6,14 +7,12 @@ import OrderModel from "../database/sequelize/model/order.model";
 
 export default class OrderRepository implements OrderRepositoryInterface {
   async create(entity: Order): Promise<void> {
-    console.log(entity);
-    
     try {
       await OrderModel.create(
         {
           id: entity.id,
           customer_id: entity.customerId,
-          total: entity.total(),
+          total: entity.total,
           items: entity.items.map((item) => ({
             id: item.id,
             name: item.name,
@@ -28,16 +27,15 @@ export default class OrderRepository implements OrderRepositoryInterface {
       );
     } catch (error) {
       console.log(error);
-      
       throw new Error("Error to create order");
     }
   }
 
   async update(entity: Order): Promise<void> {
-    OrderModel.update(
+    await OrderModel.update(
       {
         customer_id: entity.customerId,
-        total: entity.total(),
+        total: entity.total,
         items: entity.items.map((item) => ({
           id: item.id,
           name: item.name,
@@ -49,51 +47,39 @@ export default class OrderRepository implements OrderRepositoryInterface {
       {
         where: {
           id: entity.id,
-        },
+        }
       }
     );
   }
-
   async find(id: string): Promise<Order> {
     const orderModel = await OrderModel.findOne({
-      where: { id },
-      include: ["items"],
-    });
+      where: {id},
+      include: {model: OrderItemModel}
+    })
+    let items: OrderItem[] = []
 
-    const orderItem = new OrderItem(
-      orderModel.items[0].id,
-      orderModel.items[0].name,
-      orderModel.items[0].price,
-      orderModel.items[0].product_id,
-      orderModel.items[0].quantity
-    )
-
-    return new Order(
-      orderModel.id,
-      orderModel.customer_id,
-      [orderItem]
-    );
+    orderModel.items.forEach((item) => {
+      let order = new OrderItem(
+        item.id,
+        item.name,
+        item.price,
+        item.product_id,
+        item.quantity
+      )
+      items.push(order) 
+    })
+    
+    const order = new Order(orderModel.id, orderModel.customer_id, items)
+    return order
   }
 
   async findAll(): Promise<Order[]> {
-    const orderModels = await OrderModel.findAll({
-      include: ["items"],
-    });
-
-    return orderModels.map((orderModel) => {
-      const orderItem = new OrderItem(
-        orderModel.items[0].id,
-        orderModel.items[0].name,
-        orderModel.items[0].price,
-        orderModel.items[0].product_id,
-        orderModel.items[0].quantity
-      )
-
-      return new Order(
-        orderModel.id,
-        orderModel.customer_id,
-        [orderItem]
-      );
-    });
+    const ordersModel = await OrderModel.findAll({include: {model: OrderItemModel}})
+    const orders = ordersModel.map((res) => {
+       let orderItem = new OrderItem(res.items.id, res.items.name, res.items[i].price, res.items[i].product_id, res.items[i].quantity)
+       let order = new Order(res., res.customer_id, [orderItem])
+       return order
+    })
+    return orders
   }
 }

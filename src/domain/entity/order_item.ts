@@ -1,3 +1,5 @@
+import Product from "./peoduct";
+
 export default class OrderItem {
     private _id: string;
     private _name: string;
@@ -31,6 +33,16 @@ export default class OrderItem {
 
     get productId(): string{
         return this._productId
+    }
+
+    set changeQuantity(quantity: number){
+        this._quantity = quantity
+    }
+
+    changeProduct(product: Product){
+        this._name = product.name;
+        this._price = product.price;
+        this._productId = product.id
     }
 
     orderItemTotal(): number {
